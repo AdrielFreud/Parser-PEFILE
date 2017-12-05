@@ -1,2 +1,2 @@
 # Parser-PEFILE
-Python script, for check is PE or not :)
+Python script, for parsing PE FILE
