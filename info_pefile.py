@@ -4,72 +4,31 @@ import pprint
 
 menu = '''
 -----------------------------------------
-
   #  Desenvolvido por Adriel Freud!
   #  Contato: businessc0rp2k17@gmail.com 
   #  FB: http://www.facebook.com/xrn401
   #   =>DebutySecTeamSecurity<=
-
 -----------------------------------------
 \n\n'''
 
-def open_file(name, pe, file):
+def open_file(name, out):
 	with open(name, 'w') as w:
-		w.write(menu)
-		w.write('\n\t\t 	=== Is PE file ;) ===')
-		w.write('\n')
-		w.write("\n\t\t============== DOS_HEADER ==============\n")
-		w.write("%s"%pe.DOS_HEADER)
-		w.write('\n')
-		w.write("\n\t============== FILE_HEADER ==============\n")
-		w.write("%s"%pe.FILE_HEADER)
-		w.write('\n')
-		w.write("\n\t     ============== SECTIONS OF PEFILE ==============\n")
-		for sections in pe.sections:
-			w.write('\n')
-			w.write('\t\t\t==  \t%s\t=='%sections.Name)
-			if sections.Name == '.data' or '.gfids' or '.reloc':
-				w.write('\t\t\t==    \t%s\t\t=='%sections.SizeOfRawData)
-			else:
-				w.write('\t\t==    \t%s\t=='%sections.SizeOfRawData)
-		w.write('\n')
-		w.write("\n\t     ============== VERIFY PEFILE ==============\n")
-		w.write("\t\t\t CheckSum is: %s"%pe.verify_checksum())
-		w.write("\t\t\t Warnings: %s"%pe.show_warnings())
-		w.write("Version info: \n\n%s"%pe.VS_VERSIONINFO)
+		w.write(out)
 	w.close()
 
 if len(sys.argv) < 2:
-	print('Modo de Uso:')
+	print("\tModo de Uso:\n")
 	print("./pe file.exe\n ==> \t:)\n")
 	sys.exit(0)
 else:
-	global file, pe
 	file = sys.argv[1]
 	pe = pefile.PE(file)
+	info_pe= """\n\t\t\t=== Is PE file ;) ===\n
+		\t\t============== DOS_HEADER ==============\n%s\n\t============== FILE_HEADER ==============\n%s\n\t\t\tCheckSum is: %s\n\t\t\t Warnings: %s\nVersion info: \n\n%s
+		"""%(pe.DOS_HEADER, pe.FILE_HEADER, pe.verify_checksum, pe.show_warnings, pe.VS_VERSIONINFO)
 	if pe.is_exe() == True:
-		print(menu)
-		print('\n\t\t 	=== Is PE file ;) ===')
-		print('\n')
-		print("\t\t============== DOS_HEADER ==============\n")
-		print(pe.DOS_HEADER)
-		print('\n')
-		print("\t============== FILE_HEADER ==============\n")
-		print(pe.FILE_HEADER)
-		print('\n')
-		print("\t     ============== SECTIONS OF PEFILE ==============\n")
-		for sections in pe.sections:
-			print('\t\t\t==  \t%s\t=='%sections.Name)
-			if sections.Name == '.data' or '.gfids' or '.reloc':
-				print('\t\t\t==    \t%s\t\t=='%sections.SizeOfRawData)
-			else:
-				print('\t\t==    \t%s\t=='%sections.SizeOfRawData)
-			print('\t\t\t==========================')
-		print("\n\t     ============== VERIFY PEFILE ==============\n")
-		print("\t\t\t CheckSum is: %s"%pe.verify_checksum())
-		print("\t\t\t Warnings: %s"%pe.show_warnings())
-		print("Version info: \n\n%s"%pe.VS_VERSIONINFO)
-		open_file('info_pe.txt', pe, file)
+		print(info_pe)
+		open_file('info_pe.txt', info_pe)
 		pe.close()
 		#pprint.pprint(dir(pe))
 	else:
